@@ -20,6 +20,9 @@ import griffon.core.formatters.Formatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,6 +37,10 @@ public class CalendarPropertyEditor extends AbstractPropertyEditor {
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
+        } else if (value instanceof LocalDate) {
+            handleAsLocalDate((LocalDate) value);
+        } else if (value instanceof LocalDateTime) {
+            handleAsLocalDateTime(((LocalDateTime) value));
         } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Calendar) {
@@ -72,6 +79,29 @@ public class CalendarPropertyEditor extends AbstractPropertyEditor {
         } catch (ParseException e) {
             throw illegalValue(str, Calendar.class, e);
         }
+    }
+
+    protected void handleAsLocalDate(LocalDate value) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(value.toEpochDay()));
+        super.setValueInternal(c);
+    }
+
+    protected void handleAsLocalDateTime(LocalDateTime value) {
+        LocalDate localDate = value.toLocalDate();
+        LocalTime localTime = value.toLocalTime();
+
+        Calendar c = Calendar.getInstance();
+        c.set(
+            localDate.getYear(),
+            localDate.getMonthValue() - 1,
+            localDate.getDayOfMonth(),
+            localTime.getHour(),
+            localTime.getMinute(),
+            localTime.getSecond()
+        );
+
+        super.setValueInternal(c);
     }
 
     @Override

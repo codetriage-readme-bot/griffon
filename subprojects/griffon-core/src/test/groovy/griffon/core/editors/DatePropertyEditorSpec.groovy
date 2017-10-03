@@ -18,6 +18,8 @@ package griffon.core.editors
 import spock.lang.Unroll
 
 import java.beans.PropertyEditor
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Unroll
 class DatePropertyEditorSpec extends PropertyEditorSpecSupport {
@@ -43,14 +45,16 @@ class DatePropertyEditorSpec extends PropertyEditorSpecSupport {
         ''                    | null                  | null
         '1/1/70 12:00 AM'     | null                  | epochAsDate()
         '0'                   | null                  | epochAsDate()
-        0                     | null                  | epochAsDate()
-        epochAsDate()         | null                  | epochAsDate()
-        epochAsCalendar()     | null                  | epochAsDate()
-        ''                    | 'yyyy-MM-dd HH:mm:ss' | null
-        '1970-01-01 00:00:00' | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
-        0                     | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
-        epochAsDate()         | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
-        epochAsCalendar()     | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        0                                        | null                  | epochAsDate()
+        epochAsDate()                            | null                  | epochAsDate()
+        epochAsCalendar()                        | null                  | epochAsDate()
+        ''                                       | 'yyyy-MM-dd HH:mm:ss' | null
+        '1970-01-01 00:00:00'                    | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        0                                        | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        epochAsDate()                            | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        epochAsCalendar()                        | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        LocalDate.of(1970, 1, 1)                 | null                  | epochAsDate()
+        LocalDateTime.of(1970, 1, 1, 12, 13, 14) | null                  | epochAsDate()
     }
 
     void "Invalid date literal '#literal'"() {

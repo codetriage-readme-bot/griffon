@@ -16,10 +16,8 @@
 package griffon.core.editors;
 
 import griffon.core.formatters.Formatter;
-import griffon.core.formatters.LocalDateTimeFormatter;
-import griffon.metadata.PropertyEditorFor;
+import griffon.core.formatters.LocalTimeFormatter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -34,18 +32,17 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 2.4.0
  */
-@PropertyEditorFor(LocalDateTime.class)
-public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
+public class LocalTimePropertyEditor extends AbstractPropertyEditor {
     @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
         } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
-        } else if (value instanceof LocalDateTime) {
+        } else if (value instanceof LocalTime) {
             super.setValueInternal(value);
-        } else if (value instanceof LocalDate) {
-            super.setValueInternal(LocalDateTime.of((LocalDate) value, LocalTime.of(0, 0, 0, 0)));
+        } else if (value instanceof LocalDateTime) {
+            super.setValueInternal(((LocalDateTime) value).toLocalTime());
         } else if (value instanceof Date) {
             handleAsDate((Date) value);
         } else if (value instanceof Calendar) {
@@ -55,7 +52,7 @@ public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
         } else if (value instanceof List) {
             handleAsList((List) value);
         } else {
-            throw illegalValue(value, LocalDateTime.class);
+            throw illegalValue(value, LocalTime.class);
         }
     }
 
@@ -70,7 +67,7 @@ public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
         int i = value.get(Calendar.MINUTE);
         int s = value.get(Calendar.SECOND);
         int n = value.get(Calendar.MILLISECOND) * 1000;
-        super.setValueInternal(LocalDateTime.of(LocalDate.ofEpochDay(value.getTime().getTime()), LocalTime.of(h, i, s, n)));
+        super.setValueInternal(LocalTime.of(h, i, s, n));
     }
 
     protected void handleAsString(String str) {
@@ -80,15 +77,15 @@ public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
         }
 
         try {
-            super.setValueInternal(LocalDateTime.parse(str));
+            super.setValueInternal(LocalTime.parse(str));
         } catch (DateTimeParseException dtpe) {
-            throw illegalValue(str, LocalDateTime.class, dtpe);
+            throw illegalValue(str, LocalTime.class, dtpe);
         }
     }
 
     @Override
-    protected Formatter<LocalDateTime> resolveFormatter() {
-        return isBlank(getFormat()) ? null : new LocalDateTimeFormatter(getFormat());
+    protected Formatter<LocalTime> resolveFormatter() {
+        return isBlank(getFormat()) ? null : new LocalTimeFormatter(getFormat());
     }
 
     protected void handleAsList(List<?> list) {
@@ -99,30 +96,15 @@ public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
 
         List<Object> values = new ArrayList<>();
         values.addAll(list);
-        switch (list.size()) {
-            case 7:
+        switch (values.size()) {
+            case 4:
                 // ok
                 break;
-            case 6:
-                values.add(0d);
-                break;
-            case 5:
-                values.add(0d);
-                values.add(0d);
-                break;
-            case 4:
-                values.add(0d);
-                values.add(0d);
-                values.add(0d);
-                break;
             case 3:
-                values.add(0d);
-                values.add(0d);
-                values.add(0d);
-                values.add(0d);
+                values.add(0);
                 break;
             default:
-                throw illegalValue(list, LocalDateTime.class);
+                throw illegalValue(list, LocalTime.class);
         }
 
         for (int i = 0, valuesSize = values.size(); i < valuesSize; i++) {
@@ -132,18 +114,15 @@ public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
             } else if (val instanceof CharSequence) {
                 values.set(i, parse(String.valueOf(val)));
             } else {
-                throw illegalValue(list, LocalDateTime.class);
+                throw illegalValue(list, LocalTime.class);
             }
         }
         super.setValueInternal(
-            LocalDateTime.of(
+            LocalTime.of(
                 (Integer) values.get(0),
                 (Integer) values.get(1),
                 (Integer) values.get(2),
-                (Integer) values.get(3),
-                (Integer) values.get(4),
-                (Integer) values.get(5),
-                (Integer) values.get(6)
+                (Integer) values.get(3)
             )
         );
     }
@@ -152,7 +131,7 @@ public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
         try {
             return Integer.parseInt(val.trim());
         } catch (NumberFormatException e) {
-            throw illegalValue(val, LocalDateTime.class, e);
+            throw illegalValue(val, LocalTime.class, e);
         }
     }
 
