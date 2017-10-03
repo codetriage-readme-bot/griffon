@@ -211,8 +211,8 @@ class DefaultEventRouterSpec extends Specification {
     def 'Invoking an event in synchronous mode with a runnable listener'() {
         given:
 
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
+        Event event1 = new MyEvent1()
+        Event event2 = new MyEvent2()
         TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
         eventRouter.addEventListener(event1.class, eventHandler)
 
@@ -229,8 +229,8 @@ class DefaultEventRouterSpec extends Specification {
     def 'Invoking an event in asynchronous mode with a runnable listener'() {
         given:
 
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
+        Event event1 = new MyEvent1()
+        Event event2 = new MyEvent2()
         TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
         eventRouter.addEventListener(event1.class, eventHandler)
 
@@ -248,8 +248,8 @@ class DefaultEventRouterSpec extends Specification {
     def 'Invoking an event in outside mode with a runnable listener (runnable)'() {
         given:
 
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
+        Event event1 = new MyEvent1()
+        Event event2 = new MyEvent2()
         TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
         eventRouter.addEventListener(event1.class, eventHandler)
 
@@ -266,8 +266,8 @@ class DefaultEventRouterSpec extends Specification {
     def 'Invoking an event in synchronous mode with a Map listener (runnable)'() {
         given:
 
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
+        Event event1 = new MyEvent1()
+        Event event2 = new MyEvent2()
         TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
         eventRouter.addEventListener(event1.class, eventHandler)
 
@@ -284,8 +284,8 @@ class DefaultEventRouterSpec extends Specification {
     def 'Invoking an event in asynchronous mode with a Map listener (runnable)'() {
         given:
 
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
+        Event event1 = new MyEvent1()
+        Event event2 = new MyEvent2()
         TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
         eventRouter.addEventListener(event1.class, eventHandler)
 
@@ -303,8 +303,8 @@ class DefaultEventRouterSpec extends Specification {
     def 'Invoking an event in outside mode with a Map listener (runnable)'() {
         given:
 
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
+        Event event1 = new MyEvent1()
+        Event event2 = new MyEvent2()
         TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
         eventRouter.addEventListener(event1.class, eventHandler)
 
@@ -473,15 +473,9 @@ class DefaultEventRouterSpec extends Specification {
     }
 
     static class MyEvent1 extends Event {
-        MyEvent1(Object source) {
-            super(source)
-        }
     }
 
     static class MyEvent2 extends Event {
-        MyEvent2(Object source) {
-            super(source)
-        }
     }
 
     static class EventHandler {
