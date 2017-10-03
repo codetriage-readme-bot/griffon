@@ -22,7 +22,7 @@ import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonModel
 import griffon.core.artifact.GriffonView
 import griffon.core.env.ApplicationPhase
-import griffon.core.mvc.MVCFunction
+import griffon.core.mvc.MVCConsumer
 import griffon.core.mvc.MVCGroup
 import integration.SimpleController
 import integration.SimpleModel
@@ -76,8 +76,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -96,8 +96,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', 'simple-1', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', 'simple-1', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -116,8 +116,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', 'simple-2', [key: 'griffon'], new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', 'simple-2', [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -136,8 +136,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', [key: 'griffon'], new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -156,8 +156,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', 'simple-2', key: 'griffon', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', 'simple-2', key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -176,8 +176,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', key: 'griffon', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
