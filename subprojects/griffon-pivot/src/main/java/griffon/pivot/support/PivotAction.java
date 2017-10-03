@@ -15,13 +15,11 @@
  */
 package griffon.pivot.support;
 
-import griffon.core.CallableWithArgs;
 import griffon.core.RunnableWithArgs;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Component;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.util.Objects.requireNonNull;
 
@@ -43,11 +41,6 @@ public class PivotAction extends Action {
         this.runnable = requireNonNull(runnable, ERROR_RUNNABLE_NULL);
     }
 
-    @Deprecated
-    public PivotAction(@Nonnull CallableWithArgs<Void> callable) {
-        setCallable(callable);
-    }
-
     public String getName() {
         return name;
     }
@@ -63,17 +56,6 @@ public class PivotAction extends Action {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Deprecated
-    public void setCallable(@Nonnull final CallableWithArgs<Void> callable) {
-        requireNonNull(callable, ERROR_CALLABLE_NULL);
-        this.runnable = new RunnableWithArgs() {
-            @Override
-            public void run(@Nullable Object... args) {
-                callable.call(args);
-            }
-        };
     }
 
     public RunnableWithArgs getRunnable() {

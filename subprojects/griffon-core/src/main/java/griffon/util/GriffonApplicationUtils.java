@@ -395,31 +395,6 @@ public final class GriffonApplicationUtils {
         return is64Bit;
     }
 
-    @Deprecated
-    public static boolean isJdk14() {
-        return isJdk4();
-    }
-
-    @Deprecated
-    public static boolean isJdk15() {
-        return isJdk5();
-    }
-
-    @Deprecated
-    public static boolean isJdk16() {
-        return isJdk6();
-    }
-
-    @Deprecated
-    public static boolean isJdk17() {
-        return isJdk7();
-    }
-
-    @Deprecated
-    public static boolean isJdk18() {
-        return isJdk8();
-    }
-
     public static boolean isJdk4() {
         return isJdk4;
     }
@@ -514,31 +489,6 @@ public final class GriffonApplicationUtils {
 
     public static boolean getIs64Bit() {
         return is64Bit;
-    }
-
-    @Deprecated
-    public static boolean getIsJdk14() {
-        return isJdk4;
-    }
-
-    @Deprecated
-    public static boolean getIsJdk15() {
-        return isJdk5;
-    }
-
-    @Deprecated
-    public static boolean getIsJdk16() {
-        return isJdk6;
-    }
-
-    @Deprecated
-    public static boolean getIsJdk17() {
-        return isJdk7;
-    }
-
-    @Deprecated
-    public static boolean getIsJdk18() {
-        return isJdk8;
     }
 
     public static boolean getIsJdk4() {

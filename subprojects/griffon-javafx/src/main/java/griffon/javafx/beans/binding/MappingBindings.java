@@ -15,6 +15,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.javafx.collections.MappingObservableList;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.FloatBinding;
@@ -495,7 +496,7 @@ public final class MappingBindings {
      */
     @Nonnull
     public static <S, T> ObservableList<T> mapList(@Nonnull final ObservableList<? super S> source, @Nonnull final Function<S, T> mapper) {
-        return new griffon.javafx.support.MappingObservableList<>((ObservableList<? extends S>) source, mapper);
+        return new MappingObservableList<>((ObservableList<? extends S>) source, mapper);
     }
 
     /**
@@ -508,7 +509,7 @@ public final class MappingBindings {
      */
     @Nonnull
     public static <S, T> ObservableList<T> mapList(@Nonnull final ObservableList<S> source, @Nonnull final ObservableValue<Function<S, T>> mapper) {
-        return new griffon.javafx.support.MappingObservableList<>(source, mapper);
+        return new MappingObservableList<>(source, mapper);
     }
 
     /**

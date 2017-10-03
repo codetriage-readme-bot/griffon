@@ -15,7 +15,6 @@
  */
 package griffon.core.event;
 
-import griffon.core.CallableWithArgs;
 import griffon.core.RunnableWithArgs;
 
 import javax.annotation.Nonnull;
@@ -45,19 +44,10 @@ public interface EventPublisher {
      *
      * @param eventName the name of the event
      * @param listener  an event listener
+     *
      * @since 2.3.0
      */
     void addEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener);
-
-    /**
-     * Adds a callable as an event listener.<p>
-     *
-     * @param eventName the name of the event
-     * @param listener  an event listener
-     * @deprecated use the {@code RunnableWithArgs} variant instead.
-     */
-    @Deprecated
-    void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Adds a Map containing event listeners.<p>
@@ -80,16 +70,7 @@ public interface EventPublisher {
      *
      * @param eventClass the type of the event
      * @param listener   an event listener
-     * @deprecated use the {@code RunnableWithArgs} variant instead.
-     */
-    @Deprecated
-    <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener);
-
-    /**
-     * Adds a callable as an event listener.<p>
      *
-     * @param eventClass the type of the event
-     * @param listener   an event listener
      * @since 2.3.0
      */
     <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener);
@@ -107,19 +88,10 @@ public interface EventPublisher {
      *
      * @param eventName the name of the event
      * @param listener  an event listener
+     *
      * @since 2.3.0
      */
     void removeEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener);
-
-    /**
-     * Removes a callable as an event listener.<p>
-     *
-     * @param eventName the name of the event
-     * @param listener  an event listener
-     * @deprecated use the {@code RunnableWithArgs} variant instead.
-     */
-    @Deprecated
-    void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Removes a Map containing event listeners.<p>
@@ -142,19 +114,10 @@ public interface EventPublisher {
      *
      * @param eventClass the type of the event
      * @param listener   an event listener
+     *
      * @since 2.3.0
      */
     <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener);
-
-    /**
-     * Removes a callable as an event listener.<p>
-     *
-     * @param eventClass the type of the event
-     * @param listener   an event listener
-     * @deprecated use the {@code RunnableWithArgs} variant instead.
-     */
-    @Deprecated
-    <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Publishes an event.<p>
@@ -250,6 +213,7 @@ public interface EventPublisher {
      * Returns an immutable snapshot view of all event listeners registered.
      *
      * @return an immutable collection of all registered listeners.
+     *
      * @since 2.6.0
      */
     @Nonnull
@@ -259,7 +223,9 @@ public interface EventPublisher {
      * Returns an immutable snapshot view of all event listeners registered for the target event name.
      *
      * @param eventName the name of the event
+     *
      * @return an immutable collection of all registered listeners for the target event name.
+     *
      * @since 2.6.0
      */
     @Nonnull
