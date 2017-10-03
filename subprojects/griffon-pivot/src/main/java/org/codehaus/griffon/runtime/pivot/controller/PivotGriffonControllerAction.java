@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.runtime.pivot.controller;
 
-import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
@@ -27,7 +26,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,24 +44,12 @@ public class PivotGriffonControllerAction extends AbstractAction {
 
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
 
-        addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent evt) {
-                uiThreadManager.runInsideUIAsync(new Runnable() {
-                    public void run() {
-                        handlePropertyChange(evt);
-                    }
-                });
-            }
-        });
+        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     @Nonnull
     protected PivotAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        return new PivotAction(new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                actionManager.invokeAction(controller, actionName, args);
-            }
-        });
+        return new PivotAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {

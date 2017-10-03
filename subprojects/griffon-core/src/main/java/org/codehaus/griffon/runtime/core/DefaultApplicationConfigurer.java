@@ -21,7 +21,6 @@ import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
-import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
@@ -181,11 +180,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     protected void initializeResourcesInjector() {
         final ResourceInjector injector = application.getResourceInjector();
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                injector.injectResources(args[1]);
-            }
-        });
+        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> injector.injectResources(args[1]));
     }
 
     protected void initializeArtifactManager() {
@@ -241,12 +236,10 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
             return;
         }
 
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                Class<?> klass = (Class) args[0];
-                if (GriffonController.class.isAssignableFrom(klass)) {
-                    application.getActionManager().createActions((GriffonController) args[1]);
-                }
+        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
+            Class<?> klass = (Class) args[0];
+            if (GriffonController.class.isAssignableFrom(klass)) {
+                application.getActionManager().createActions((GriffonController) args[1]);
             }
         });
 

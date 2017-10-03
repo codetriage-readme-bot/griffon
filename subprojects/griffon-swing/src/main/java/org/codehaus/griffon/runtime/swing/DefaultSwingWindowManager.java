@@ -72,13 +72,15 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * Finds a JInternalFrame by name.
      *
      * @param name the value of the name: property
+     *
      * @return a JInternalFrame if a match is found, null otherwise.
+     *
      * @since 2.0.0
      */
     public JInternalFrame findInternalFrame(String name) {
         if (!GriffonNameUtils.isBlank(name)) {
             for (JInternalFrame internalFrame : internalFrames.values()) {
-                if (name.equals(internalFrame.getName())) return internalFrame;
+                if (name.equals(internalFrame.getName())) { return internalFrame; }
             }
         }
         return null;
@@ -123,6 +125,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * Returns the list of internal frames managed by this manager.
      *
      * @return a List of currently managed internal frames
+     *
      * @since 2.0.0
      */
     public Collection<JInternalFrame> getInternalFrames() {
@@ -135,6 +138,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      *
      * @param name          the value of the of the Window's name
      * @param internalFrame the internal frame to be added to the list of managed internal frames
+     *
      * @since 2.0.0
      */
     public void attach(@Nonnull String name, @Nonnull JInternalFrame internalFrame) {
@@ -149,9 +153,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
 
         doAttach(internalFrame);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Attaching internal frame with name: '" + name + "' at index " + internalFrames.size() + " " + internalFrame);
-        }
+        LOG.debug("Attaching internal frame with name: '{}' at index {} {}", name, internalFrames.size(), internalFrame);
         internalFrames.put(name, internalFrame);
         event(ApplicationEvent.WINDOW_ATTACHED, asList(name, internalFrame));
     }
@@ -166,6 +168,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * is registered with this manager.
      *
      * @param name the value of the of the Window's name
+     *
      * @since 2.0.0
      */
     @Override
@@ -176,9 +179,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
 
             doDetach(window);
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Detaching internalFrame with name: '" + name + "' " + window);
-            }
+            LOG.debug("Detaching internalFrame with name: '{}' {}", name, window);
             internalFrames.remove(name);
             event(ApplicationEvent.WINDOW_DETACHED, asList(name, window));
         }
@@ -193,6 +194,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
      * @param internalFrame the internal frame to show
+     *
      * @since 2.0.0
      */
     public void show(@Nonnull final JInternalFrame internalFrame) {
@@ -218,14 +220,10 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         final String name = windowName;
         final int index = windowIndex;
 
-        getApplication().getUIThreadManager().runInsideUIAsync(new Runnable() {
-            public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Showing window with name: '" + name + "' at index " + index + " " + internalFrame);
-                }
-                //noinspection ConstantConditions
-                resolveSwingWindowDisplayHandler().show(name, internalFrame);
-            }
+        getApplication().getUIThreadManager().runInsideUIAsync(() -> {
+            LOG.debug("Showing window with name: '{}' at index {} {}", name, index, internalFrame);
+            //noinspection ConstantConditions
+            resolveSwingWindowDisplayHandler().show(name, internalFrame);
         });
     }
 
@@ -234,6 +232,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
      * @param internalFrame the internal frame to hide
+     *
      * @since 2.0.0
      */
     public void hide(@Nonnull final JInternalFrame internalFrame) {
@@ -259,14 +258,10 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         final String name = windowName;
         final int index = windowIndex;
 
-        getApplication().getUIThreadManager().runInsideUIAsync(new Runnable() {
-            public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Hiding window with name: '" + name + "' at index " + index + " " + internalFrame);
-                }
-                //noinspection ConstantConditions
-                resolveSwingWindowDisplayHandler().hide(name, internalFrame);
-            }
+        getApplication().getUIThreadManager().runInsideUIAsync(() -> {
+            LOG.debug("Hiding window with name: '{}' at index {} {}", name, index, internalFrame);
+            //noinspection ConstantConditions
+            resolveSwingWindowDisplayHandler().hide(name, internalFrame);
         });
     }
 
@@ -332,7 +327,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
 
             if (visibleWindows <= 1 && isAutoShutdown()) {
                 LOG.debug("Attempting to shutdown application");
-                if (!getApplication().shutdown()) show(event.getWindow());
+                if (!getApplication().shutdown()) { show(event.getWindow()); }
             }
         }
     }

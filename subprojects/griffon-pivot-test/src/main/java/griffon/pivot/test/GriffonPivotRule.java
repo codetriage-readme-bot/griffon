@@ -59,12 +59,7 @@ public class GriffonPivotRule implements MethodRule {
             @Override
             public void evaluate() throws Throwable {
                 TestDesktopPivotApplication.init(target);
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        DesktopApplicationContext.main(TestDesktopPivotApplication.class, startupArgs);
-                    }
-                });
+                SwingUtilities.invokeAndWait(() -> DesktopApplicationContext.main(TestDesktopPivotApplication.class, startupArgs));
                 TestDesktopPivotApplication.getLatch().await();
                 GriffonApplication application = TestDesktopPivotApplication.getApplication();
                 application.getInjector().injectMembers(target);

@@ -21,8 +21,6 @@ import griffon.core.controller.ActionMetadata;
 import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,21 +35,8 @@ public class DefaultAction extends AbstractAction {
         super(actionManager, controller, actionMetadata);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = new DefaultToolkitAction(new Runnable() {
-            @Override
-            public void run() {
-                actionManager.invokeAction(controller, actionMetadata.getActionName());
-            }
-        });
-        addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent evt) {
-                uiThreadManager.runInsideUIAsync(new Runnable() {
-                    public void run() {
-                        toolkitAction.setName(String.valueOf(evt.getNewValue()));
-                    }
-                });
-            }
-        });
+        toolkitAction = new DefaultToolkitAction(() -> actionManager.invokeAction(controller, actionMetadata.getActionName()));
+        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> toolkitAction.setName(String.valueOf(evt.getNewValue()))));
     }
 
     @Nonnull

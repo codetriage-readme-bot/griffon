@@ -22,7 +22,6 @@ import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.GriffonApplication;
-import griffon.core.RunnableWithArgs;
 import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
@@ -149,7 +148,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     @Override
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
         requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);
-        if (!shutdownHandlers.contains(handler)) shutdownHandlers.add(handler);
+        if (!shutdownHandlers.contains(handler)) { shutdownHandlers.add(handler); }
     }
 
     @Override
@@ -290,7 +289,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     @Override
     public void ready() {
-        if (getPhase() != ApplicationPhase.STARTUP) return;
+        if (getPhase() != ApplicationPhase.STARTUP) { return; }
 
         showStartingWindow();
 
@@ -334,9 +333,9 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     public boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
-        if (getPhase() == ApplicationPhase.SHUTDOWN) return false;
+        if (getPhase() == ApplicationPhase.SHUTDOWN) { return false; }
 
-        if (!canShutdown()) return false;
+        if (!canShutdown()) { return false; }
         log.info("Shutdown is in process");
 
         // signal that shutdown is in process
@@ -349,12 +348,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         log.debug("Shutdown stage 1: notify all event listeners");
         if (getEventRouter().isEventPublishingEnabled()) {
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
-            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new RunnableWithArgs() {
-                @Override
-                public void run(@Nullable Object... args) {
-                    latch.countDown();
-                }
-            });
+            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), args -> latch.countDown());
             event(ApplicationEvent.SHUTDOWN_START, asList(this));
             try {
                 latch.await();
@@ -392,7 +386,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     @SuppressWarnings("unchecked")
     @Override
     public void startup() {
-        if (getPhase() != ApplicationPhase.INITIALIZE) return;
+        if (getPhase() != ApplicationPhase.INITIALIZE) { return; }
 
         setPhase(ApplicationPhase.STARTUP);
         event(ApplicationEvent.STARTUP_START, asList(this));

@@ -100,13 +100,11 @@ public abstract class AbstractEventRouter implements EventRouter {
 
     protected void runInsideExecutorService(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
-        executorService.submit(new Runnable() {
-            public void run() {
-                try {
-                    runnable.run();
-                } catch (Throwable throwable) {
-                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
-                }
+        executorService.submit(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable throwable) {
+                exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
             }
         });
     }
@@ -407,32 +405,30 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonNull(event, ERROR_EVENT_NULL);
         requireNonNull(params, ERROR_PARAMS_NULL);
         requireNonBlank(mode, ERROR_MODE_BLANK);
-        return new Runnable() {
-            public void run() {
-                String eventName = capitalize(event);
-                LOG.debug("Triggering event '{}' {}", eventName, mode);
-                String eventHandler = "on" + eventName;
-                // defensive copying to avoid CME during event dispatching
-                List<Object> listenersCopy = new ArrayList<>();
-                List<Object> instances = instanceListeners.get(eventName);
-                if (instances != null) {
-                    listenersCopy.addAll(instances);
+        return () -> {
+            String eventName = capitalize(event);
+            LOG.debug("Triggering event '{}' {}", eventName, mode);
+            String eventHandler = "on" + eventName;
+            // defensive copying to avoid CME during event dispatching
+            List<Object> listenersCopy = new ArrayList<>();
+            List<Object> instances = instanceListeners.get(eventName);
+            if (instances != null) {
+                listenersCopy.addAll(instances);
+            }
+            synchronized (functionalListeners) {
+                List<?> list = functionalListeners.get(eventName);
+                if (list != null) {
+                    listenersCopy.addAll(list);
                 }
-                synchronized (functionalListeners) {
-                    List<?> list = functionalListeners.get(eventName);
-                    if (list != null) {
-                        listenersCopy.addAll(list);
-                    }
-                }
+            }
 
-                for (Object listener : listenersCopy) {
-                    if (listener instanceof RunnableWithArgs) {
-                        fireEvent((RunnableWithArgs) listener, params);
-                    } else if (listener instanceof CallableWithArgs) {
-                        fireEvent((CallableWithArgs<?>) listener, params);
-                    } else {
-                        fireEvent(listener, eventHandler, params);
-                    }
+            for (Object listener : listenersCopy) {
+                if (listener instanceof RunnableWithArgs) {
+                    fireEvent((RunnableWithArgs) listener, params);
+                } else if (listener instanceof CallableWithArgs) {
+                    fireEvent((CallableWithArgs<?>) listener, params);
+                } else {
+                    fireEvent(listener, eventHandler, params);
                 }
             }
         };

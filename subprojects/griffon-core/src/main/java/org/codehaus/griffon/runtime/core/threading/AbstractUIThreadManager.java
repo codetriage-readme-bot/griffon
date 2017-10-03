@@ -94,13 +94,11 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
         if (!isUIThread()) {
             runnable.run();
         } else {
-            executorService.submit(new Runnable() {
-                public void run() {
-                    try {
-                        runnable.run();
-                    } catch (Throwable throwable) {
-                        exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
-                    }
+            executorService.submit(() -> {
+                try {
+                    runnable.run();
+                } catch (Throwable throwable) {
+                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
                 }
             });
         }
@@ -110,13 +108,11 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
     public void runOutsideUIAsync(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
 
-        executorService.submit(new Runnable() {
-            public void run() {
-                try {
-                    runnable.run();
-                } catch (Throwable throwable) {
-                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
-                }
+        executorService.submit(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable throwable) {
+                exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
             }
         });
     }

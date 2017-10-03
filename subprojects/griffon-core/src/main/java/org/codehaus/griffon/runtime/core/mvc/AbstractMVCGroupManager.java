@@ -290,7 +290,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         MVCGroup group = null;
         try {
             group = createMVCGroup(configuration, mvcId, args);
-            handler.apply(group);
+            handler.accept(group);
         } finally {
             try {
                 if (group != null) {
@@ -556,7 +556,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         MVC group = null;
         try {
             group = createMVCGroup(mvcType, mvcId, args);
-            handler.apply(group);
+            handler.accept(group);
         } finally {
             try {
                 if (group != null) {
